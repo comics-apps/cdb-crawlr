@@ -21,7 +21,7 @@ module CDB
       do_rename if verify_map
     end
 
-  private
+    private
 
     def do_rename
       Dir.chdir(@path) do
@@ -117,6 +117,5 @@ module CDB
         .select{|i| i.num.match(/^#{ISSUE_NUM}$/i)}
         .map{|i| [i.num.to_s, i]}]
     end
-
   end
 end

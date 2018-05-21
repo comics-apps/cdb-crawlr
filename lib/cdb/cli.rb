@@ -26,7 +26,7 @@ module CDB
       send self[:command]
     end
 
-  private
+    private
 
     def search
       case self[:type]
@@ -79,6 +79,5 @@ module CDB
       raise error.to_s unless File.directory?(v)
       @options[:path] = v
     end
-
   end
 end
