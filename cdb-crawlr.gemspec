@@ -17,4 +17,5 @@ Gem::Specification.new do |s|
   s.executables   = Dir['bin/**/*'].map{|f| File.basename(f)}
 
   s.add_dependency "nokogiri"
+  s.add_dependency "thor", "~> 0.20"
 end

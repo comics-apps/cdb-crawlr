@@ -1,83 +1,51 @@
-require 'pp'
+require 'thor'
 
 module CDB
-  class CLI
-    COMMANDS = %w[search show rename]
-    TYPES = %w[series issue issues]
+  class CLI < Thor
+    desc "search [TYPE] [QUERY]", "Search for entries of a given TYPE matching QUERY"
+    long_desc <<-LONGDESC
+      Search for entries of a given TYPE matching QUERY
 
-    def initialize(options={})
-      @options = options
-    end
-
-    def [](k)
-      @options[k]
-    end
-
-    def []=(k, v)
-      v = v.to_s.strip
-      begin
-        send("#{k}=", v)
-      rescue NoMethodError
-        @options[k] = v
-      end
-    end
-
-    def execute
-      send self[:command]
-    end
-
-    private
-
-    def search
-      case self[:type]
+      TYPE - "issue" or "series"
+      \x5QUERY - query string
+    LONGDESC
+    def search(type, query)
+      case type
       when 'series'
-        CDB::Series.search(self[:args]).each{|r| puts r.to_json}
+        CDB::Series.search(query).each{|r| puts r.to_json}
       when 'issue', 'issues'
-        CDB::Issue.search(self[:args]).each{|r| puts r.to_json}
+        CDB::Issue.search(query).each{|r| puts r.to_json}
       end
     end
 
-    def show
-      case self[:type]
+    desc "show [TYPE] [CDB_ID]", "Show details of an entry using a CDB_ID obtained from search"
+    long_desc <<-LONGDESC
+      Show details of an entry using a CDB_ID obtained from search
+
+      TYPE - "series"
+    LONGDESC
+    def show(type, cdb_id)
+      case type
       when 'series'
-        res = CDB::Series.show(self[:args])
+        res = CDB::Series.show(cdb_id)
         res.issues.each{|i| i.series=nil}
         puts res.to_json(array_nl:"\n", object_nl:"\n", indent:'  ')
       end
     end
 
+    desc "rename", "Rename a directory of comics according to series data"
+    long_desc <<-LONGDESC
+      Rename a directory of comics according to series data
+
+      Optional options:
+      \x5-f / --force - Perform the rename without any confirmations
+      \x5-i / --ignore - Ignore warnings about unknown and misformatted issue numbers
+    LONGDESC
+    method_option :force, type: :boolean, aliases: "-f"
+    method_option :ignore, type: :boolean, aliases: "-i"
     def rename
-      renamer = CDB::Renamer.new(@options)
+      renamer = CDB::Renamer.new(options)
       renamer.execute
-    end
-
-    def args=(v)
-      raise "invalid args" if v.empty?
-      @options[:args] = v
-    end
-
-    def command=(v)
-      v = v.downcase
-      raise unless COMMANDS.include?(v)
-      @options[:command] = v
-    end
-
-    def type=(v)
-      v = v.downcase
-      error = "invalid TYPE: #{v}" unless v.empty?
-      if @options[:command] == 'show'
-        # remove when "show issue" is supported
-        raise error.to_s unless v == 'series'
-      else
-        raise error.to_s unless TYPES.include?(v)
-      end
-      @options[:type] = v
-    end
-
-    def path=(v)
-      error = "#{v}: No such directory" unless v.empty?
-      raise error.to_s unless File.directory?(v)
-      @options[:path] = v
     end
   end
 end
