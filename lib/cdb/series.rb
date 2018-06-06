@@ -3,13 +3,13 @@ module CDB
     FORM_SEARCHTYPE = 'Title'
     WEB_PATH = 'title.php'
 
-    def self.search(query)
-      results = CDB.search(query, FORM_SEARCHTYPE)
+    def self.search(query, options = {})
+      results = CDB.search(query, FORM_SEARCHTYPE, options)
       results[:series]
     end
 
-    def self.show(id)
-      CDB.show(id, self)
+    def self.show(id, options = {})
+      CDB.show(id, self, options)
     end
 
     def self.parse_results(node)

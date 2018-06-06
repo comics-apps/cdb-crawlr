@@ -3,8 +3,8 @@ module CDB
     FORM_SEARCHTYPE = 'IssueName'
     WEB_PATH = 'issue.php'
 
-    def self.search(query)
-      results = CDB.search(query, FORM_SEARCHTYPE)
+    def self.search(query, options = {})
+      results = CDB.search(query, FORM_SEARCHTYPE, options)
       results[:issues]
     end
 
