@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'cdb-crawlr'
+require_relative '../lib/cdb-crawlr'
 # load 'lib/cdb-crawlr.rb'
 require 'optparse'
 
