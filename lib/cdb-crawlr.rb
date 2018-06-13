@@ -9,10 +9,9 @@ require 'cdb/renamer'
 require 'cdb/struct'
 require 'cdb/issue'
 require 'cdb/series'
+require 'cdb/version'
 
 module CDB
-  VERSION = '0.3.3'
-
   BASE_URL = 'http://www.comicbookdb.com'
   REQUEST_HEADERS = {'Connection' => 'keep-alive'}
   SEARCH_PATH = 'search.php'
