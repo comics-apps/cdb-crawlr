@@ -28,7 +28,7 @@ module CDB
     long_desc <<-LONGDESC
       Show details of an entry using a CDB_ID obtained from search
 
-      TYPE - "series"
+      TYPE - "publisher", "series"
 
       Optional options:
       \x5--proxy "http://123.123.123.123:8888"
@@ -38,6 +38,10 @@ module CDB
     method_option :user_agent
     def show(type, cdb_id)
       case type
+      when 'publisher'
+        res = CDB::Publisher.show(cdb_id, options)
+        res.series.each{|i| i.publisher_name=nil}
+        puts res.to_json(array_nl:"\n", object_nl:"\n", indent:'  ')
       when 'series'
         res = CDB::Series.show(cdb_id, options)
         res.issues.each{|i| i.series=nil}

@@ -8,6 +8,7 @@ require 'cdb/cli'
 require 'cdb/renamer'
 require 'cdb/struct'
 require 'cdb/issue'
+require 'cdb/publisher'
 require 'cdb/series'
 require 'cdb/version'
 

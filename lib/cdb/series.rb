@@ -45,5 +45,17 @@ module CDB
       end
       series
     end
+
+    def self.from_link(node, publisher)
+      name = node.text.strip
+      year = name.slice(-5..-2)
+      name = name.gsub(" (#{year})", '')
+      new(
+        :cdb_id => node['href'].split('=').last.strip.to_i,
+        :publisher_name => publisher.name,
+        :name => name,
+        :start_date => year
+      )
+    end
   end
 end
